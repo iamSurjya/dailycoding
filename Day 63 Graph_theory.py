@@ -6,7 +6,6 @@ class Node(object):
     def __str__(self):
         return self.name
 
-
 class Edge(object):
     def __init__(self,src,dest):
         self.src=src
@@ -18,16 +17,15 @@ class Edge(object):
     def __str__(self):
         return self.getName()+'->'+dest.getName()
 
-
 class Digraph(object):
     def __init__(self):
         self.edges={} #edges is a dictionary,that maps each node to a list of its childrens/destinations
-    def addNode(self):
+    def addNode(self,node):
         if node in self.edges:
             raise ValueError('Duplicate Node')
         else:
             self.edges[node]=[]# Each node is saved a key which is associated with a list of destination nodes
-    def addEdge(self):
+    def addEdge(self,edge):
         src=edge.getSrc()
         dest=edge.getDest()
         if not(src in self.edges and dest in self.edges):
@@ -47,9 +45,8 @@ class Digraph(object):
         result=''
         for src in self.edges:
             for dest in self.edges[src]:
-                result=result+ src.getName()+'->'+ dest.getName()
+                result=result+ src.getName()+'->'+ dest.getName()+'\n'
         return result
-
 
 class Graph(Digraph): #an graph can have edges both ways(directions)
     def addEdge(self,edge):
@@ -59,3 +56,22 @@ class Graph(Digraph): #an graph can have edges both ways(directions)
         Digraph.addEdge(self,rev)
 #Why dont we make Digraph to be a subclass of Graph,because every Digraph is a graph but every graph is not a Digraph.
 #That means anything that works for digraph will work for Graph, but anything that works for Graph may or may not work for Digraphs.
+
+def buildCityGraph(graphType):
+    g = graphType()
+    for name in ('Boston', 'Providence', 'New York', 'Chicago','Denver', 'Phoenix', 'Los Angeles'):
+        g.addNode(Node(name))
+    g.addEdge(Edge(g.getNode('Boston'), g.getNode('Providence')))
+    g.addEdge(Edge(g.getNode('Boston'), g.getNode('New York')))
+    g.addEdge(Edge(g.getNode('Providence'), g.getNode('Boston')))
+    g.addEdge(Edge(g.getNode('Providence'), g.getNode('New York')))
+    g.addEdge(Edge(g.getNode('New York'), g.getNode('Chicago')))
+    g.addEdge(Edge(g.getNode('Chicago'), g.getNode('Denver')))
+    g.addEdge(Edge(g.getNode('Chicago'), g.getNode('Phoenix')))
+    g.addEdge(Edge(g.getNode('Denver'), g.getNode('Phoenix')))
+    g.addEdge(Edge(g.getNode('Denver'), g.getNode('New York')))
+    g.addEdge(Edge(g.getNode('Los Angeles'), g.getNode('Boston')))
+    return g
+
+g=buildCityGraph(Digraph)
+print(g)
