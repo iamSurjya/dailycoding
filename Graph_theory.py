@@ -101,8 +101,8 @@ def DFS(graph,start,end,path,shortest,toPrint=False):
             print('Already visited',node)
     return shortest
 
-def shortestPath(graph,start,end,toPrint=False):
-    return DFS(graph,start,end,[],None,toPrint)
+#def shortestPath(graph,start,end,toPrint=False):
+#    return DFS(graph,start,end,[],None,toPrint)
 
 
 def testSP(source, destination):
@@ -114,5 +114,27 @@ def testSP(source, destination):
     else:
         print('There is no path from', source, 'to', destination)
 
-testSP('Chicago', 'Boston')
+#testSP('Chicago', 'Boston')
+#print()
+
+def BFS(graph,start,end,toPrint=False):
+    initpath=[start]
+    pathQueue=[initpath]
+    while len(pathQueue)!=0:
+        tmpPath=pathQueue.pop(0)
+        if toPrint:
+            print('Current BFS path',printPath(tmpPath))
+        lastNode=tmpPath[-1]
+        if lastNode==end:
+            return tmpPath
+        for nextNode in graph.childrenOf(lastNode):
+            if  nextNode not in tmpPath:
+                newPath=tmpPath+[nextNode]
+                pathQueue.append(newPath)
+    return None
+
+def shortestPath(graph, start, end, toPrint = False):
+     return BFS(graph, start, end, toPrint)
+
+testSP('Boston', 'Phoenix')
 print()
