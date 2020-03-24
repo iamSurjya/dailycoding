@@ -82,3 +82,9 @@ def drunkTest(Walklengths,numTrials,dClass):
 
 random.seed(0)
 drunkTest((10,100,1000),100,UsualDrunk)
+
+def simAll(drunkKinds, walkLengths, numTrials):
+    for dClass in drunkKinds:
+        drunkTest(walkLengths, numTrials, dClass)
+
+simAll((UsualDrunk, NorthMoving),(1000, 10000), 100)
