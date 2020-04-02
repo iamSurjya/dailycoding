@@ -27,9 +27,37 @@ def playRoulette(game,numSpins,pocket,bet,toPrint):
         print('Expected return betting',pocket,'=',str(100*totpocket/numSpins)+'%\n')
     return (totpocket/numSpins)
 
-random.seed(0)
-game=FairRoulette()
+class EuRoulette(FairRoulette):
+    def __init__(self):
+        FairRoulette.__init__(self)
+        self.pockets.append('0')
+    def __str__(self):
+        return 'European Roulette'
 
-for numSpins in (100,100000):
-    for i in range(3):
-        playRoulette(game,numSpins,2,1,True)
+class AmRoulette(EuRoulette):
+    def __init__(self):
+        EuRoulette.__init__(self)
+        self.pockets.append('00')
+    def __str__(self):
+        return 'American Roulette'
+
+def findPocketReturn(game,numTrials,trialsize,toPrint):
+    pocketReturn=[]
+    for t in range(numTrials):
+        trialVals=playRoulette(game,trialsize,2,1,toPrint)
+        pocketReturn.append(trialVals)
+    return pocketReturn
+
+random.seed(0)
+numTrials = 20
+resultDict = {}
+
+games={FairRoulette,EuRoulette,AmRoulette}
+for G in games:
+    resultDict[G().__str__()]=[]
+for numSpins in (1000,10000,100000,1000000):
+    print('\nSimulate', numTrials, 'trials of',numSpins, 'spins each')
+    for G in games:
+        pocketReturn =findPocketReturn(G(),numTrials,numSpins,False)
+        expReturn=100*sum(pocketReturn)/len(pocketReturn)
+        print('Exp. return for', G(), '=',str(round(expReturn, 4)) + '%')
